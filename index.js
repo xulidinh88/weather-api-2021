@@ -4,6 +4,9 @@ const app = express();
 const port = process.env.PORT || "3000";
 const url = require("url");
 const axios = require('axios');
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
 
 axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=20.26&lon=105.98&appid=1ab622d7b5732550a1ba64acf09920cf`)
 .then(data => {
