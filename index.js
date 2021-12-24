@@ -7,36 +7,21 @@ const axios = require('axios');
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
-
-axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=20.26&lon=105.98&appid=1ab622d7b5732550a1ba64acf09920cf`)
+const API_KEY = '1ab622d7b5732550a1ba64acf09920cf';
+//init Object
+axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=20.26&lon=105.98&appid=${API_KEY}`)
 .then(data => {
     console.log(data.data)
     let object = {
-        current: {
-            id: data.data.id,
-            name: data.data.name,
-            lat: 20.26,
-            lon: 105.98,
-            temp: Math.ceil(data.data.main.temp - 273.15),
-            main: data.data.weather.main,
-            wind: data.data.wind.speed,
-            humidity: data.data.main.humidity,
-        },
+        current: data.data,
         favorite: [
             
         ],
-        render: {
-            id: data.data.id,
-            name: data.data.name,
-            lat: 20.26,
-            lon: 105.98,
-            temp: Math.ceil(data.data.main.temp - 273.15),
-            main: data.data.weather.main,
-            wind: data.data.wind.speed,
-            humidity: data.data.main.humidity,
-        }
+        render: data.data
     };
-    app.use(express.json());
+// CRUD 
+console.log(object);
+app.use(express.json());
 app.use(cors());
 app.get("/", (req, res) => {
 	res.status(200).send(object);
@@ -56,20 +41,12 @@ app.get("/favorite/:id", (req, res) => {
 })
 
 app.post("/favorite", (req, res) => {
-	const newLocation = {
-		id: object.favorite.length + 1,
-		name: req.body.name,
-        lat: req.body.lat,
-        lon: req.body.lon,
-        temp: req.body.temp,
-        main: req.body.main,
-        wind: req.body.wind,
-        humidity: req.body.humidity
-	};
-    if (newLocation.name !== undefined) {
-        object.favorite.push(newLocation);
-    }
-	res.send(object.favorite);
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${req.body.lat}&lon=${req.body.lon}&appid=${API_KEY}`)
+	.then(data => {
+        data.data.id = object.favorite.length + 1;
+        object.favorite.push(data.data);
+        res.send(object.favorite);
+    })
 });
 
 app.delete("/favorite/:id", (req, res) => {
@@ -83,37 +60,26 @@ app.delete("/favorite/:id", (req, res) => {
 app.put('/favorite/:id', (req, res) => {
     let del = object.favorite.find(fav => fav.id === parseInt(req.params.id));
     if(!del) res.status(404).send('The favorite withe the given ID was not found');
-    del.name = req.body.name;
-    del.lat = req.body.lat;
-    del.lon = req.body.lon;
-    del.temp = req.body.temp;
-    del.main = req.body.main;
-    del.wind = req.body.wind;
-    del.humidity = req.body.humidity;
-    res.send(del);
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${req.body.lat}&lon=${req.body.lon}&appid=${API_KEY}`)
+	.then(data => {
+        Object.assign(del, data.data);
+        res.send(del);
+    })
 })
 
 app.put("/render", (req, res) => {
-    object.render.id = req.body.id;
-	object.render.name = req.body.name;
-    object.render.lat = req.body.lat;
-    object.render.lon = req.body.lon;
-    object.render.temp = req.body.temp;
-    object.render.main = req.body.main;
-    object.render.wind = req.body.wind;
-    object.render.humidity = req.body.humidity;
-	res.send(object.render);
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${req.body.lat}&lon=${req.body.lon}&appid=${API_KEY}`)
+	.then(data => {
+        Object.assign(object.render, data.data);
+        res.send(object.render);
+    })
 })
 app.put("/current", (req, res) => {
-    object.current.id = req.body.id;
-	object.current.name = req.body.name;
-    object.current.lat = req.body.lat;
-    object.current.lon = req.body.lon;
-    object.current.temp = req.body.temp;
-    object.current.main = req.body.main;
-    object.current.wind = req.body.wind;
-    object.current.humidity = req.body.humidity;
-	res.send(object.current);
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${req.body.lat}&lon=${req.body.lon}&appid=${API_KEY}`)
+	.then(data => {
+        Object.assign(object.current, data.data);
+        res.send(object.current);
+    })
 });
 
 app.listen(port, () => {
