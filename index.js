@@ -15,22 +15,24 @@ const API_KEY = '1ab622d7b5732550a1ba64acf09920cf';
 const initData = () => {
     const weather = axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=20.26&lon=105.98&appid=${API_KEY}`);
     const AQI = axios.get(`https://api.openweathermap.org/data/2.5/air_pollution?lat=20.26&lon=105.98&appid=${API_KEY}`);
-
-    return Promise.all([weather, AQI]);
+    const forecast = axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=20.26&lon=105.98&appid=${API_KEY}`);
+    return Promise.all([weather, AQI, forecast]);
 }
 initData()
 .then(data => {
     let object = {
         current: {
             weather: data[0].data,
-            AQI: data[1].data
+            AQI: data[1].data,
+            forecast: data[2].data
         },
         favorite: [
             
         ],
         render: {
             weather: data[0].data,
-            AQI: data[1].data
+            AQI: data[1].data,
+            forecast: data[2].data
         }
     };
 
@@ -69,11 +71,17 @@ function getMethod(object) {
     app.get("/current/AQI", (req, res) => {
         res.status(200).send(object.current.AQI);
     });
+    app.get("/current/forecast", (req, res) => {
+        res.status(200).send(object.current.forecast);
+    });
     app.get("/render/weather", (req, res) => {
         res.status(200).send(object.render.weather);
     });
     app.get("/render/AQI", (req, res) => {
         res.status(200).send(object.render.AQI);
+    });
+    app.get("/render/forecast", (req, res) => {
+        res.status(200).send(object.render.forecast);
     });
     app.get("/favorite/:id", (req, res) => {
     const getObject = object.favorite.filter(fav => fav.id === parseInt(req.params.id));
@@ -88,7 +96,8 @@ function postMethod(object) {
             const favoriteObject = {
                 id: object.favorite.length + 1,
                 weather: arr[0].data,
-                AQI: arr[1].data
+                AQI: arr[1].data,
+                forecast: arr[2].data
             }
             object.favorite.push(favoriteObject);
             res.send(object.favorite);
@@ -116,7 +125,8 @@ function putMethod(object) {
             let newObject = {
                 id: del.id,
                 weather: arr[0].data,
-                AQI: arr[1].data
+                AQI: arr[1].data,
+                forecast: arr[2].data
             }
             Object.assign(del, newObject);
             res.send(del);
@@ -128,6 +138,7 @@ function putMethod(object) {
 	    .then(arr => {
             Object.assign(object.render.weather, arr[0].data);
             Object.assign(object.render.AQI, arr[1].data);
+            Object.assign(object.render.forecast, arr[2].data);
             res.send(object.render);
         })
     });
@@ -137,6 +148,7 @@ function putMethod(object) {
 	    .then(arr => {
             Object.assign(object.current.weather, arr[0].data);
             Object.assign(object.current.AQI, arr[1].data);
+            Object.assign(object.current.forecast, arr[2].data);
             res.send(object.render);
         })
     });
@@ -144,5 +156,6 @@ function putMethod(object) {
 function getDataFromAPI(lat, lon) {
     const weather = axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`);
     const AQI = axios.get(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`);
-    return Promise.all([weather, AQI])
+    const forecast = axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`);
+    return Promise.all([weather, AQI, forecast])
 }
