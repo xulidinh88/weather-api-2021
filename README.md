@@ -1,5 +1,5 @@
-# weather-api-2021
-## Using Nodejs, Express, Cors, axios
+# weather-api-2021 deploy heroku
+## Using Nodejs, Express, Cors, Axios, Weather API
 ## Source API: 
 - Weather: openweather api (lat, lon)
 - AQI: openweather api (lat, lon)
