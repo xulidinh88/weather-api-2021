@@ -14,4 +14,18 @@
 - "Favorite" : [{
 }]
 - "Render": {}
-
+## Method
+- Get: 
+    - In this project, we can get: 
+    - "/", "/current", "/favorite", "/render"
+    - "/current/weather", "/current/weather", "/current/forecast"
+    - "/render/weather", "/render/AQI", "/render/forecast"
+    - "/favorite/:id"
+- Post:
+    - We can update data of "/favorite" by using "req.body.lat", "req.body.lon"
+- Put:
+    - We can change data of "/favorite:/:id" by using "req.body.lat, "req.body.lon"
+    - We can change data of "/render" by using "req.body.lat, "req.body.lon"
+    - We can change data of "/current" by using "req.body.lat, "req.body.lon"
+- Delete: 
+    - We can remove data of "/favorite/:id", if this id doesn't exist, we will receive a message: "The favorite withe the given ID was not found" 
