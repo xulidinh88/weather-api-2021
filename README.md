@@ -1,9 +1,9 @@
 # weather-api-2021 deploy heroku
 ## Using Nodejs, Express, Cors, Axios, Weather API
 ## Source API: 
-- Weather: openweather api (lat, lon)
+- Weather: openweather api (lat, lon), current weather
 - AQI: openweather api (lat, lon)
-- Forecast: openweather api (lat, lon)
+- Forecast: openweather api (lat, lon), 5 day weather forecast
 - I used Promise.all(Weather, AQI, Forecast) ==> https://weather-api-2021-100eggs.herokuapp.com/
 ## This API: 
 - "Current": {
